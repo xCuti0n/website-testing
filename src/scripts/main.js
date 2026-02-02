@@ -37,7 +37,7 @@ function initCarousel() {
 }
 
 function updateRadius() {
-    radius = window.innerWidth <= 768 ? 220 : 350;
+    radius = window.innerWidth <= 768 ? 150 : 350;
 }
 
 function updateCarouselPositions() {
