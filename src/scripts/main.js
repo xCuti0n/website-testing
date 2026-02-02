@@ -49,7 +49,10 @@ function updateCarouselPositions() {
         const x = radius * Math.sin(theta);
         const z = radius * Math.cos(theta);
 
-        img.style.transform = `translateX(${x}px) translateZ(${z}px)`;
+        // Calculate scale based on z-position (closer = larger)
+        const scale = 0.7 + (z + radius) / (2 * radius) * 0.3;
+
+        img.style.transform = `translateX(${x}px) translateZ(${z}px) scale(${scale})`;
 
         const zIndex = Math.round(z + radius);
         img.style.zIndex = zIndex;
