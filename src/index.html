@@ -7,9 +7,23 @@
     <link rel="stylesheet" href="styles/style.css">
 </head>
 <body>
+    <!-- Start Button Splash Screen -->
+    <div class="start-splash" id="startSplash">
+        <div class="floor-dots" aria-hidden="true"></div>
+        <div class="logo-overlay" aria-hidden="true"></div>
+        <div class="title-overlay" aria-hidden="true">
+            <div class="subtitle">ARKNIGHTS</div>
+            <div class="title">ENDFIELD</div>
+        </div>
+        <button class="play-btn" onclick="startVideo()">Click to continue</button>
+    </div>
+
+    <!-- Blackout layer to ensure the site doesn't show between splash and video -->
+    <div id="blackout" class="blackout" style="display: none;"></div>
+
     <!-- Video Splash Screen -->
-    <div class="video-splash" id="videoSplash">
-        <video autoplay playsinline id="splashVideo">
+    <div class="video-splash" id="videoSplash" style="display: none;">
+        <video muted playsinline id="splashVideo">
             <source src="assets/video/intro.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>

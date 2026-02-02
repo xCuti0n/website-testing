@@ -1,3 +1,248 @@
+                        /* Start Button Splash Screen */
+                        .start-splash {
+                                position: fixed;
+                                top: 0;
+                                left: 0;
+                                width: 100%;
+                                height: 100vh;
+                                /* Subtle grey tech-y backdrop with scanlines */
+                                background: linear-gradient(180deg, #e7e9ec 0%, #dfe2e6 100%);
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                z-index: 10000;
+                                opacity: 1;
+                                transition: opacity 0.8s ease-out;
+                                overflow: hidden;
+                        }
+
+                            /* Center logo overlay (silhouette-style) */
+                            .start-splash .logo-overlay {
+                                position: absolute;
+                                top: 50%;
+                                left: 50%;
+                                transform: translate(-50%, -50%);
+                                width: 28vw;
+                                aspect-ratio: 2 / 3; /* ensure visible height from width */
+                                max-width: 520px;
+                                min-width: 200px;
+                                min-height: 240px;
+                                pointer-events: none; /* do not block clicks */
+                                z-index: 6;
+                                /* Use user-provided cutout as a mask to render pure silhouette */
+                                /* silhouette fill color + subtle steel-blue gradient */
+                                background: linear-gradient(180deg, rgba(128,153,184,0.85) 0%, rgba(92,119,150,0.85) 100%);
+                                -webkit-mask-image: url('../assets/images/silhouette.png');
+                                mask-image: url('../assets/images/silhouette.png');
+                                -webkit-mask-mode: alpha;
+                                mask-mode: alpha;
+                                -webkit-mask-size: contain;
+                                mask-size: contain;
+                                -webkit-mask-repeat: no-repeat;
+                                mask-repeat: no-repeat;
+                                -webkit-mask-position: center;
+                                mask-position: center;
+                                filter: drop-shadow(0 12px 28px rgba(0,0,0,0.30));
+                                opacity: 0.85;
+                            }
+
+                            /* Optional soft vignette around silhouette */
+                            .start-splash .logo-overlay::after {
+                                content: "";
+                                position: absolute;
+                                inset: -12%;
+                                pointer-events: none;
+                                background: radial-gradient(ellipse at center,
+                                    rgba(0,0,0,0.0) 45%,
+                                    rgba(0,0,0,0.35) 90%);
+                            }
+
+                        /* Scanline overlay (fewer and extra subtle) */
+                        .start-splash::before {
+                                content: "";
+                                position: absolute;
+                                inset: 0;
+                                background:
+                                    /* fewer dark lines */
+                                    repeating-linear-gradient(0deg,
+                                        rgba(0,0,0,0.08) 0px,
+                                        rgba(0,0,0,0.08) 1px,
+                                        transparent 22px
+                                    ),
+                                    /* occasional soft light bands */
+                                    repeating-linear-gradient(0deg,
+                                        rgba(255,255,255,0.03) 0px,
+                                        rgba(255,255,255,0.03) 4px,
+                                        transparent 60px
+                                    );
+                                mix-blend-mode: multiply;
+                                opacity: 0.30;
+                                pointer-events: none;
+                        }
+
+                        /* Horizontal accent bar across screen */
+                        .start-splash::after {
+                                content: "";
+                                position: absolute;
+                                left: -10%;
+                                right: -10%;
+                                top: 52%;
+                                height: 22px;
+                                background: linear-gradient(90deg, transparent 0 2%, #f2e347 2%, #f2e347 80%, transparent 98% 100%);
+                                box-shadow: 0 0 30px rgba(242, 227, 71, 0.35);
+                                transform: translateY(-50%);
+                                pointer-events: none;
+                        }
+
+            .start-splash.hide {
+                opacity: 0;
+                pointer-events: none;
+            }
+
+            /* Full-screen blackout layer to prevent site visibility between splash and video */
+            .blackout {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: #000;
+                z-index: 10001; /* above start-splash, below video-splash */
+                opacity: 0;
+                transition: opacity 0.6s ease-out;
+                pointer-events: none; /* do not block interactions with video overlay */
+            }
+
+            /* Right-center CTA styled like "Click to continue" */
+            .play-btn {
+                position: absolute;
+                right: 28px;
+                top: 52%;
+                transform: translateY(-50%);
+                display: inline-flex;
+                align-items: center;
+                gap: 10px;
+                padding: 12px 18px;
+                border-radius: 22px;
+                background: #ffe24d;
+                color: #151515;
+                border: 1px solid rgba(0,0,0,0.25);
+                font-size: 16px;
+                font-weight: 700;
+                letter-spacing: 0.2px;
+                cursor: pointer;
+                box-shadow: 0 6px 24px rgba(255, 226, 77, 0.35);
+                transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+                z-index: 10;
+            }
+
+            .play-btn::before {
+                content: "▶";
+                display: inline-block;
+                width: 20px;
+                height: 20px;
+                line-height: 20px;
+                text-align: center;
+                font-size: 14px;
+                background: #151515;
+                color: #ffe24d;
+                border-radius: 50%;
+                box-shadow: inset 0 0 0 2px rgba(0,0,0,0.35);
+            }
+
+            .play-btn:hover {
+                transform: translateY(-50%) scale(1.04);
+                box-shadow: 0 10px 32px rgba(255, 226, 77, 0.5);
+                background: #ffeb7a;
+            }
+
+            @media (max-width: 768px) {
+                .play-btn {
+                    left: 50%;
+                    right: auto;
+                    top: calc(52% + 72px); /* just below the title */
+                    transform: translateX(-50%);
+                    padding: 10px 16px;
+                    font-size: 15px;
+                }
+            }
+
+            /* Title overlay styling to emulate reference */
+            .title-overlay {
+                position: absolute;
+                left: 50%;
+                top: 52%;
+                transform: translate(-50%, -50%);
+                width: 70vw;
+                max-width: 1100px;
+                text-align: center;
+                z-index: 7;
+                pointer-events: none;
+            }
+
+            .title-overlay .subtitle {
+                font-weight: 700;
+                letter-spacing: 0.5rem;
+                font-size: clamp(12px, 1.4vw, 20px);
+                color: rgba(20,20,20,0.85);
+                margin-bottom: 6px;
+                text-transform: uppercase;
+            }
+
+            .title-overlay .title {
+                font-weight: 900;
+                font-size: clamp(42px, 9vw, 150px);
+                letter-spacing: 0.05em;
+                color: #111;
+                text-shadow:
+                  0 2px 0 rgba(255,255,255,0.25),
+                  0 12px 24px rgba(0,0,0,0.25);
+            }
+
+            /* slight glitch accent on title */
+            .title-overlay .title::after {
+                content: 'ENDFIELD';
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
+                top: 0;
+                color: rgba(255, 226, 77, 0.35);
+                clip-path: polygon(0 36%, 100% 36%, 100% 64%, 0 64%);
+                filter: blur(0.6px);
+                pointer-events: none;
+            }
+
+            /* Dotted floor illusion */
+            .start-splash .floor-dots {
+                position: absolute;
+                left: 50%;
+                bottom: -6vh;
+                transform: translateX(-50%) perspective(900px) rotateX(66deg);
+                width: 120vw;
+                height: 58vh;
+                z-index: 5; /* behind title and button */
+                pointer-events: none;
+                /* dot grid */
+                background-image: radial-gradient(rgba(0,0,0,0.50) 1.8px, transparent 2.6px);
+                background-size: 34px 34px;
+                background-position: center;
+                opacity: 0.42;
+                filter: saturate(110%) blur(0.2px);
+                /* fade to transparent towards the top of plane */
+                -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 20%, rgba(0,0,0,0) 90%);
+                mask-image: linear-gradient(to top, rgba(0,0,0,1) 20%, rgba(0,0,0,0) 90%);
+            }
+
+            @media (max-width: 768px) {
+                .start-splash .floor-dots {
+                    bottom: -10vh;
+                    height: 42vh;
+                    background-size: 28px 28px;
+                    opacity: 0.38;
+                    transform: translateX(-50%) perspective(800px) rotateX(64deg);
+                }
+            }
+
             /* Video Splash Screen */
             .video-splash {
                 position: fixed;
@@ -9,9 +254,16 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                z-index: 9999;
+                z-index: 10002;
                 opacity: 1;
                 transition: opacity 0.8s ease-out;
+                overflow: hidden; /* ensure video crops cleanly when covering */
+            }
+
+            /* Short fade-in when entering */
+            .video-splash.enter {
+                opacity: 0;
+                transition: opacity 0.5s ease-out;
             }
 
             .video-splash.hide {
@@ -27,7 +279,8 @@
 
             @media (max-width: 768px) {
                 .video-splash video {
-                    object-fit: contain;
+                    object-fit: cover; /* fill portrait view */
+                    object-position: center; /* crop from center */
                     background-color: #000;
                 }
 
@@ -51,7 +304,7 @@
                 font-size: 14px;
                 font-weight: bold;
                 transition: background 0.3s;
-                z-index: 10000;
+                z-index: 10003;
             }
 
             .skip-btn:hover {
@@ -62,8 +315,8 @@
             body {
                 margin: 0;
                 font-family: 'Times New Roman', Times, serif;
-                overflow: hidden;
-                height: 100vh;
+                overflow-x: hidden;
+                min-height: 100vh;
             }
 
             /* Fixed background image that stays in place when scrolling */
@@ -168,5 +421,85 @@
                 .content {
                     padding: 12px;
                     font-size: 0.95rem;
+                }
+            }
+
+            /* Mobile portrait fine-tuning for overall fit */
+            @media (max-width: 768px) and (orientation: portrait) {
+                /* Respect safe areas */
+                body {
+                    padding-top: env(safe-area-inset-top);
+                    padding-bottom: env(safe-area-inset-bottom);
+                }
+
+                /* Start splash tighter scaling */
+                .start-splash .logo-overlay {
+                    width: 48vw;
+                    max-width: 360px;
+                    min-width: 160px;
+                }
+                .title-overlay {
+                    width: 86vw;
+                }
+                .title-overlay .subtitle {
+                    letter-spacing: 0.35rem;
+                    font-size: clamp(11px, 2.8vw, 16px);
+                }
+                .title-overlay .title {
+                    font-size: clamp(36px, 12vw, 84px);
+                }
+                .start-splash .floor-dots {
+                    width: 135vw;
+                    height: 40vh;
+                    opacity: 0.36;
+                }
+                .play-btn {
+                    left: 50%;
+                    right: auto;
+                    top: calc(52% + 72px);
+                    transform: translateX(-50%);
+                    padding: 10px 16px;
+                    font-size: 15px;
+                }
+                .play-btn:hover,
+                .play-btn:active {
+                    transform: translateX(-50%) scale(1.04);
+                }
+
+                /* Content sizing */
+                .content {
+                    max-width: 92vw;
+                    margin: 0 auto;
+                }
+                .content h1 {
+                    font-size: clamp(18px, 6vw, 28px);
+                    margin: 10px 0 6px;
+                }
+                .content h2 {
+                    font-size: clamp(16px, 5vw, 24px);
+                    margin: 4px 0 10px;
+                }
+
+                /* Featured image height cap */
+                .featured {
+                    max-height: 40vh;
+                    width: 94vw;
+                    margin: 8px auto;
+                }
+
+                /* Carousel spacing and sizes */
+                .carousel-container {
+                    max-width: 94vw;
+                    margin: 8px auto 8px;
+                    padding: 6px 0;
+                    perspective: 800px;
+                }
+                .gallery {
+                    height: 18vh;
+                }
+                .gallery img {
+                    width: 34vw;
+                    height: calc(34vw * 0.72);
+                    margin-left: -17vw;
                 }
             }

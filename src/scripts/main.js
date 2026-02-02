@@ -23,16 +23,106 @@ function fadeOutAudio(video, duration = 1000) {
     requestAnimationFrame(fade);
 }
 
+// Track video timeout so we can clear it on skip/end
+let videoTimeoutId = null;
+function clearVideoTimeout() {
+    if (videoTimeoutId) {
+        clearTimeout(videoTimeoutId);
+        videoTimeoutId = null;
+    }
+}
+
 function hideVideoSplash() {
     const splash = document.getElementById('videoSplash');
     if (splash) {
+        splash.classList.remove('enter');
         splash.classList.add('hide');
+        // After fade-out, fully hide and remove blackout
+        setTimeout(() => {
+            splash.style.display = 'none';
+            hideBlackout();
+        }, 800);
+    }
+    clearVideoTimeout();
+}
+
+function hideStartSplash() {
+    const startSplash = document.getElementById('startSplash');
+    if (startSplash) {
+        startSplash.classList.add('hide');
+    }
+}
+
+function showVideoSplash() {
+    const videoSplash = document.getElementById('videoSplash');
+    if (videoSplash) {
+        // Show and apply a short class-based fade-in
+        videoSplash.style.display = 'flex';
+        videoSplash.classList.remove('hide');
+        videoSplash.classList.add('enter');
+        // Trigger reflow then switch to visible state
+        void videoSplash.offsetHeight;
+        videoSplash.classList.remove('enter');
+    }
+}
+
+function startVideo() {
+    // Smoothly fade to black above the splash, without fading the splash itself
+    showBlackout();
+    // After blackout is fully opaque, remove the splash and reveal the video
+    setTimeout(() => {
+        removeStartSplash();
+        showVideoSplash();
+
+        const video = document.getElementById('splashVideo');
+        if (video) {
+            // User interacted, attempt play with sound
+            video.muted = false;
+            video.play().catch(error => {
+                console.log('Play with sound failed:', error);
+                video.muted = true;
+                video.play();
+            });
+        }
+
+        // Fade the blackout away to reveal the video overlay
+        hideBlackout();
+    }, 600);
+}
+
+function showBlackout() {
+    const blackout = document.getElementById('blackout');
+    if (blackout) {
+        // Smooth fade to black; blackout sits above splash so site never appears
+        blackout.style.display = 'block';
+        blackout.style.opacity = '0';
+        // Trigger reflow then fade to full opacity
+        void blackout.offsetHeight;
+        blackout.style.opacity = '1';
+    }
+}
+
+function removeStartSplash() {
+    const startSplash = document.getElementById('startSplash');
+    if (startSplash) {
+        startSplash.style.display = 'none';
+    }
+}
+
+function hideBlackout() {
+    const blackout = document.getElementById('blackout');
+    if (blackout) {
+        blackout.style.opacity = '0';
+        setTimeout(() => {
+            blackout.style.display = 'none';
+        }, 600);
     }
 }
 
 function skipVideo() {
     const video = document.getElementById('splashVideo');
     if (video) {
+        clearVideoTimeout();
         fadeOutAudio(video, 500);
         video.pause();
         video.currentTime = 0;
@@ -47,17 +137,30 @@ function setupVideoSplash() {
     if (video && splash) {
         // Hide splash when video ends
         video.addEventListener('ended', hideVideoSplash);
+        video.addEventListener('ended', clearVideoTimeout);
         
-        // Handle video errors (if video file doesn't exist, hide splash)
-        video.addEventListener('error', hideVideoSplash);
+        // Handle video errors with logging
+        video.addEventListener('error', (e) => {
+            console.error('Video error:', e);
+            hideVideoSplash();
+        });
         
-        // Auto-stop video and fade out sound after 13 seconds
-        setTimeout(() => {
-            if (video && !video.paused) {
-                fadeOutAudio(video, 1000);
-                setTimeout(hideVideoSplash, 1000);
-            }
-        }, 13000);
+        // Schedule 13s timeout starting from when video begins playing
+        const scheduleTimeout = () => {
+            clearVideoTimeout();
+            videoTimeoutId = setTimeout(() => {
+                if (video && !video.paused) {
+                    console.log('13 second timeout - stopping video');
+                    fadeOutAudio(video, 1000);
+                    setTimeout(hideVideoSplash, 1000);
+                }
+            }, 13000);
+        };
+
+        video.addEventListener('play', scheduleTimeout);
+        video.addEventListener('pause', clearVideoTimeout);
+    } else {
+        console.error('Video element not found');
     }
 }
 
@@ -214,5 +317,7 @@ window.addEventListener('DOMContentLoaded', () => {
     setupVideoSplash();
     initCarousel();
 });
+
+// Add your JavaScript code here for interactivity
 
 // Add your JavaScript code here for interactivity
