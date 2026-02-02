@@ -81,7 +81,7 @@ function animateRotation(startRotation, endRotation, duration = 250, direction) 
         galleryImages.forEach((img, index) => {
             if (progress < 1) {
                 // Apply motion blur in rotation direction
-                const motionBlur = Math.sin(progress * Math.PI) * 999; // 0 to 8px
+                const motionBlur = Math.sin(progress * Math.PI) * 24; // 0 to 8px
                 const blurDirection = direction > 0 ? 'blur' : 'blur'; // both use blur, but direction affects perception
                 img.style.filter = `${blurDirection}(${motionBlur}px)`;
             }
