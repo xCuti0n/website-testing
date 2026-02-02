@@ -55,7 +55,7 @@ function updateCarouselPositions() {
         // Calculate opacity and blur based on depth (closer = more opaque, sharper)
         const depthRatio = (z + radius) / (2 * radius);
         const opacity = 0.6 + depthRatio * 0.4;
-        const blur = 1 - depthRatio * 1;
+        const blur = index === currentIndex ? 0 : 1 - depthRatio;
 
         img.style.transform = `translateX(${x}px) translateZ(${z}px) scale(${scale})`;
         img.style.opacity = opacity;
