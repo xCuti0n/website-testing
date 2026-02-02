@@ -52,7 +52,14 @@ function updateCarouselPositions() {
         // Calculate scale based on z-position (closer = larger)
         const scale = 0.7 + (z + radius) / (2 * radius) * 0.3;
 
+        // Calculate opacity and blur based on depth (closer = more opaque, sharper)
+        const depthRatio = (z + radius) / (2 * radius);
+        const opacity = 0.6 + depthRatio * 0.4;
+        const blur = 2 - depthRatio * 2;
+
         img.style.transform = `translateX(${x}px) translateZ(${z}px) scale(${scale})`;
+        img.style.opacity = opacity;
+        img.style.filter = `blur(${blur}px)`;
 
         const zIndex = Math.round(z + radius);
         img.style.zIndex = zIndex;
