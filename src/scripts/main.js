@@ -1,5 +1,66 @@
 // This file contains the JavaScript code for the website. It handles interactivity and dynamic content on the webpage.
 
+// Video Splash Screen Functions
+function fadeOutAudio(video, duration = 1000) {
+    if (!video) return;
+    
+    const startVolume = video.volume;
+    const startTime = Date.now();
+    
+    const fade = () => {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        video.volume = startVolume * (1 - progress);
+        
+        if (progress < 1) {
+            requestAnimationFrame(fade);
+        } else {
+            video.volume = 0;
+            video.muted = true;
+        }
+    };
+    
+    requestAnimationFrame(fade);
+}
+
+function hideVideoSplash() {
+    const splash = document.getElementById('videoSplash');
+    if (splash) {
+        splash.classList.add('hide');
+    }
+}
+
+function skipVideo() {
+    const video = document.getElementById('splashVideo');
+    if (video) {
+        fadeOutAudio(video, 500);
+        video.pause();
+        video.currentTime = 0;
+    }
+    hideVideoSplash();
+}
+
+function setupVideoSplash() {
+    const video = document.getElementById('splashVideo');
+    const splash = document.getElementById('videoSplash');
+    
+    if (video && splash) {
+        // Hide splash when video ends
+        video.addEventListener('ended', hideVideoSplash);
+        
+        // Handle video errors (if video file doesn't exist, hide splash)
+        video.addEventListener('error', hideVideoSplash);
+        
+        // Auto-stop video and fade out sound after 13 seconds
+        setTimeout(() => {
+            if (video && !video.paused) {
+                fadeOutAudio(video, 1000);
+                setTimeout(hideVideoSplash, 1000);
+            }
+        }, 13000);
+    }
+}
+
 const images = [
     "assets/images/ENDFIELD_SHARE_1769345197.png",
     "assets/images/ENDFIELD_SHARE_1769345104.png",
@@ -81,7 +142,7 @@ function animateRotation(startRotation, endRotation, duration = 250, direction) 
         galleryImages.forEach((img, index) => {
             if (progress < 1) {
                 // Apply motion blur in rotation direction
-                const motionBlur = Math.sin(progress * Math.PI) * 24; // 0 to 8px
+                const motionBlur = Math.sin(progress * Math.PI) * 24; // 0 to 24px
                 const blurDirection = direction > 0 ? 'blur' : 'blur'; // both use blur, but direction affects perception
                 img.style.filter = `${blurDirection}(${motionBlur}px)`;
             }
@@ -149,6 +210,9 @@ function changeFeatured(el) {
 }
 
 // Initialize on page load
-window.addEventListener('DOMContentLoaded', initCarousel);
+window.addEventListener('DOMContentLoaded', () => {
+    setupVideoSplash();
+    initCarousel();
+});
 
-    // Add your JavaScript code here for interactivity
+// Add your JavaScript code here for interactivity
