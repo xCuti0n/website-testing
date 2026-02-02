@@ -67,7 +67,7 @@ function updateCarouselPositions() {
     });
 }
 
-function animateRotation(startRotation, endRotation, duration = 250) {
+function animateRotation(startRotation, endRotation, duration = 250, direction) {
     const startTime = performance.now();
 
     function step(now) {
@@ -75,12 +75,28 @@ function animateRotation(startRotation, endRotation, duration = 250) {
         const progress = Math.min(elapsed / duration, 1);
         const ease = 0.5 - Math.cos(progress * Math.PI) / 2; // ease-in-out
         currentRotation = startRotation + (endRotation - startRotation) * ease;
+        
+        // Apply motion blur during animation
+        const galleryImages = document.querySelectorAll('#carousel img');
+        galleryImages.forEach((img, index) => {
+            if (progress < 1) {
+                // Apply motion blur in rotation direction
+                const motionBlur = Math.sin(progress * Math.PI) * 999; // 0 to 8px
+                const blurDirection = direction > 0 ? 'blur' : 'blur'; // both use blur, but direction affects perception
+                img.style.filter = `${blurDirection}(${motionBlur}px)`;
+            }
+        });
+        
         updateCarouselPositions();
 
         if (progress < 1) {
             requestAnimationFrame(step);
         } else {
             currentRotation = endRotation;
+            // Clear motion blur
+            galleryImages.forEach(img => {
+                img.style.filter = '';
+            });
             updateCarouselPositions();
             isAnimating = false;
         }
@@ -110,7 +126,7 @@ function rotateToImage(targetIndex) {
     const endRotation = currentRotation - anglePerImage * diff;
     currentRotation = endRotation;
     isAnimating = true;
-    animateRotation(startRotation, endRotation);
+    animateRotation(startRotation, endRotation, 250, diff);
 }
 
 function changeFeatured(el) {
