@@ -13,7 +13,7 @@ let isAnimating = false;
 let currentIndex = 0;
 const totalImages = images.length;
 const anglePerImage = 360 / totalImages;
-const radius = 350; // Radius of the cylinder
+let radius = 350; // Radius of the cylinder
 
 // Initialize carousel positions
 function initCarousel() {
@@ -27,7 +27,17 @@ function initCarousel() {
         });
     });
 
+    updateRadius();
     updateCarouselPositions();
+
+    window.addEventListener('resize', () => {
+        updateRadius();
+        updateCarouselPositions();
+    });
+}
+
+function updateRadius() {
+    radius = window.innerWidth <= 768 ? 220 : 350;
 }
 
 function updateCarouselPositions() {
