@@ -41,54 +41,69 @@
                 margin: 20px auto;
                 box-shadow: 2px 2px 7px 1px #000000;
                 display: block;
-                transition: opacity 0.5s ease-in-out;
+                transition: opacity 0.7s ease-in-out;
             }
 
-            /* Grid layout for gallery images - responsive columns */
+            /* Carousel container */
+            .carousel-container {
+                position: relative;
+                max-width: 1200px;
+                margin: 40px auto;
+                padding: 40px 0;
+                perspective: 1000px;
+                overflow: visible;
+            }
+
+            /* Gallery carousel - 3D cylinder */
             .gallery {
-                display: grid;
-                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-                justify-content: center;
-                margin: clamp(10px, 4vw, 40px);
-                gap: clamp(12px, 4vw, 40px);
-                object-position: center;
-            }
-            
-            /* Styling for individual gallery images */
-            .gallery img {
+                position: relative;
                 width: 100%;
-                aspect-ratio: 4 / 3;
-                height: auto;
-                object-fit: cover;
-                box-shadow: 2px 2px 7px 1px #000000;
-                border-radius: 6px;
-                transition: transform 0.3s;
+                height: 200px;
+                margin: 0 auto;
+                transform-style: preserve-3d;
+                transition: transform 0.8s ease-in-out;
             }
             
-            /* Hover effect - scales image up when mouse hovers */
-            .gallery img:hover {
-                transform: scale(1.10);
+            /* Styling for individual gallery images positioned on cylinder */
+            .gallery img {
+                position: absolute;
+                left: 50%;
+                margin-left: -125px;
+                top: 0;
+                width: 250px;
+                height: 180px;
+                object-fit: cover;
+                box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+                border-radius: 8px;
+                cursor: pointer;
+                transition: transform 0.8s ease-in-out;
+                pointer-events: auto;
             }
 
-            /* Style for selected image - dims it to show it's the current featured image */
-            .gallery img.selected {
-                transition: opacity 0.5s ease-in-out;
-                opacity: 0.5;
+            .gallery img:hover {
+                box-shadow: 0 8px 30px rgba(247, 54, 54, 0.6);
+                transform: scale(1.05);
             }
+
 
             @media (max-width: 768px) {
+                .featured {
+                    max-width: 100%;
+                    margin: 10px auto;
+                }
 
-            .featured {
-            max-width: 100%;
-            margin: 10px auto;
-            }
+                .gallery {
+                    height: 160px;
+                }
 
-            .gallery {
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            }
+                .gallery img {
+                    width: 200px;
+                    height: 140px;
+                    margin-left: -100px;
+                }
 
-            .content {
-            padding: 12px;
-            font-size: 0.95rem;
+                .content {
+                    padding: 12px;
+                    font-size: 0.95rem;
+                }
             }
-        }
