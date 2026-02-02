@@ -93,13 +93,13 @@
                 }
 
                 .gallery {
-                    height: 110px;
+                    height: 100px;
                 }
 
                 .gallery img {
-                    width: 140px;
-                    height: 95px;
-                    margin-left: -70px;
+                    width: 130px;
+                    height: 85px;
+                    margin-left: -65px;
                 }
 
                 .content {
